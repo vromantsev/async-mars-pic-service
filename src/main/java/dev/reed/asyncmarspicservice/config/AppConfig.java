@@ -45,8 +45,7 @@ public class AppConfig {
     }
 
     @Bean
-    public Binding binding(final Queue queue,
-                           final Exchange exchange) {
+    public Binding binding(final Queue queue, final Exchange exchange) {
         return BindingBuilder.bind(queue)
                 .to(exchange)
                 .with(rabbitMQProperties.getRoutingKey())
@@ -56,11 +55,9 @@ public class AppConfig {
     @Bean
     public MessageConverter messageConverter() {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
-        converter.setClassMapper(new DefaultJackson2JavaTypeMapper() {
-            {
-                setTrustedPackages("dev.reed.asyncmarspicservice.dto");
-            }
-        });
+        DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
+        typeMapper.setTrustedPackages("dev.reed.asyncmarspicservice.dto");
+        converter.setClassMapper(typeMapper);
         return converter;
     }
 }
